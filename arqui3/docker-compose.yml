@@ -1,0 +1,106 @@
+version: '3.8'
+
+services:
+  # PostgreSQL para el servicio de Requisiciones (s1)
+  requisitions_db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: requisitions_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - requisitions_data:/var/lib/postgresql/data
+
+  # PostgreSQL para el servicio de Vacantes (s2)
+  vacancies_db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: vacancies_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - vacancies_data:/var/lib/postgresql/data
+
+  # PostgreSQL para el servicio de Candidatos (s3)
+  candidates_db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: candidates_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5434:5432"
+    volumes:
+      - candidates_data:/var/lib/postgresql/data
+
+  # PostgreSQL para el servicio de Evaluaciones (s4)
+  evaluations_db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: evaluations_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5435:5432"
+    volumes:
+      - evaluations_data:/var/lib/postgresql/data
+
+  # PostgreSQL para el servicio de Entrevistas (s5)
+  interviews_db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: interviews_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5436:5432"
+    volumes:
+      - interviews_data:/var/lib/postgresql/data
+
+  # PostgreSQL para el servicio de Selección (s6)
+  selections_db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: selections_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5437:5432"
+    volumes:
+      - selections_data:/var/lib/postgresql/data
+
+  # Zookeeper para Kafka
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+
+  # Kafka Broker
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+
+volumes:
+  requisitions_data:
+  vacancies_data:
+  candidates_data:
+  evaluations_data:
+  interviews_data:
+  selections_data: 
